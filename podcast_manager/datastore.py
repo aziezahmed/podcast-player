@@ -1,7 +1,7 @@
 import os
 import sys
 from os.path import expanduser
-import logging
+
 class DataStore():
     def __init__(self):
         self.basedir = "~/.podcast"
