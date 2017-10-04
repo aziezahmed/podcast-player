@@ -2,7 +2,7 @@
 podcast
 
 Usage:
-  podcast
+  podcast list
   podcast add <url>
   podcast -h | --help
   podcast --version
@@ -26,12 +26,19 @@ from docopt import docopt
 
 from . import __version__ as VERSION
 from podcast_manager.datastore import DataStore
+from podcast_manager.feed import Feed
 
 def main():
 
     dataStore = DataStore()
+
     options = docopt(__doc__, version=VERSION)
+
     if (options["add"]):
         dataStore.add_podcast(options["<url>"])
 
-    print(dataStore.get_podcasts())
+    if (options["list"]):
+        podcasts = dataStore.get_podcasts()
+        for podcast in podcasts:
+            fd = Feed(podcast)
+            fd.parse()
