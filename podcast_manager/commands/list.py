@@ -10,6 +10,6 @@ class List(Base):
 
     def run(self):
         dataStore = DataStore()
-        podcasts = dataStore.get_podcasts()
+        podcasts = dataStore.get_podcast_names()
         for podcast in podcasts:
             print(podcast)
