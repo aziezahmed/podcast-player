@@ -16,7 +16,7 @@ class DataStore():
         PodcastDatabase._connection = sqlite.builder()(expanduser(self.basedir + os.sep + 'podcast.sqlite'), debug=False)
         PodcastDatabase.createTable(ifNotExists=True)        
 
-    def get_podcasts(self):
+    def get_podcast_urls(self):
         podcasts = list(PodcastDatabase.select())
         podcast_urls = []
         
