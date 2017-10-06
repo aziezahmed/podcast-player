@@ -35,6 +35,5 @@ class DataStore():
         return podcast_names
 
     def add_podcast(self, podcast_url):
-        self.podcasts.append(podcast_url)
         feed = feedparser.parse(podcast_url)
         PodcastDatabase(name=feed.feed.title, url=podcast_url)
