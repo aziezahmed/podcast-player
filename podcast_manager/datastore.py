@@ -14,18 +14,25 @@ class DataStore():
         self.basedir = "~/.podcast"
             
         PodcastDatabase._connection = sqlite.builder()(expanduser(self.basedir + os.sep + 'podcast.sqlite'), debug=False)
-        PodcastDatabase.createTable(ifNotExists=True)
-        
+        PodcastDatabase.createTable(ifNotExists=True)        
+
+    def get_podcasts(self):
         podcasts = list(PodcastDatabase.select())
         podcast_urls = []
         
         for podcast in podcasts:
             podcast_urls.append(podcast.url)
         
-        self.podcasts = podcast_urls
+        return podcast_urls
 
-    def get_podcasts(self):
-        return self.podcasts
+    def get_podcast_names(self):
+        podcasts = list(PodcastDatabase.select())
+        podcast_names = []
+        
+        for podcast in podcasts:
+            podcast_names.append(podcast.name)
+        
+        return podcast_names
 
     def add_podcast(self, podcast_url):
         self.podcasts.append(podcast_url)
