@@ -1,10 +1,10 @@
+"""The list command. Used to list the podcast library. """
 
 from json import dumps
 
 from .base import Base
 
 from podcast_manager.datastore import DataStore
-
 
 class List(Base):
 

@@ -1,3 +1,5 @@
+"""The datastore class. Used to store your podcast library. """
+
 import os
 import sys
 from os.path import expanduser

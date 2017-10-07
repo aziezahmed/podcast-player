@@ -1,3 +1,4 @@
+"""The parse command. Used to get a specific podcast episode. """
 
 from json import dumps
 

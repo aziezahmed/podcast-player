@@ -1,4 +1,4 @@
-
+"""The add command. Used to add a podcast to the podcast library. """
 
 from json import dumps
 
