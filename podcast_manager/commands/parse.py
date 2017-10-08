@@ -8,6 +8,9 @@ from podcast_manager.datastore import DataStore
 
 import feedparser
 
+import os
+import sys
+
 class Parse(Base):
 
     def run(self):
@@ -27,4 +30,7 @@ class Parse(Base):
             print(str(index+1) + " - " + entry['title'])
         
         choice = input('Which episode: ')
-        print(feed.entries[int(choice)-1]["link"])
+        url = feed.entries[int(choice)-1]["link"]
+        
+        os.system("mpv "+ url)
+        sys.exit(0)
