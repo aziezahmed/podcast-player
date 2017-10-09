@@ -4,7 +4,7 @@ from json import dumps
 
 from .base import Base
 
-from podcast_manager.datastore import DataStore
+from podcast_player.datastore import DataStore
 
 class List(Base):
 

@@ -27,16 +27,16 @@ from . import __version__ as VERSION
 
 def main():
 
-    import podcast_manager.commands
+    import podcast_player.commands
 
     options = docopt(__doc__, version=VERSION)
 
     if(options["list"]):
-        list = podcast_manager.commands.List(options)
+        list = podcast_player.commands.List(options)
         list.run()
     elif(options["add"]):
-        add = podcast_manager.commands.Add(options)
+        add = podcast_player.commands.Add(options)
         add.run()
     else:
-        parse = podcast_manager.commands.Parse(options)
+        parse = podcast_player.commands.Parse(options)
         parse.run()

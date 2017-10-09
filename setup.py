@@ -7,7 +7,7 @@ from subprocess import call
 
 from setuptools import Command, find_packages, setup
 
-from podcast_manager import __version__
+from podcast_player import __version__
 
 
 this_dir = abspath(dirname(__file__))
@@ -37,7 +37,7 @@ setup(
     version = __version__,
     description = 'A Python CLI podcast manager.',
     long_description = long_description,
-    url = 'https://github.com/aziezahmed/podcast-manager',
+    url = 'https://github.com/aziezahmed/podcast-player',
     author = 'Aziez Ahmed Chawdhary',
     author_email = '',
     license = 'UNLICENSE',
@@ -63,7 +63,7 @@ setup(
     },
     entry_points = {
         'console_scripts': [
-            'podcast=podcast_manager.cli:main',
+            'podcast=podcast_player.cli:main',
         ],
     },
     cmdclass = {'test': RunTests},
