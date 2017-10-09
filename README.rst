@@ -1,5 +1,6 @@
-podcast-manager
-===============
+podcast-player
+==============
 
-*A CLI Podcast Manager written in Python*
+Work in progress. A command-line podcast application.
+Orgainse your podcasts, stream episodes and download episodes.
 
