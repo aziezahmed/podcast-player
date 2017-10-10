@@ -4,6 +4,10 @@ import os, configparser
 
 class UserSettings(object):
     def __init__(self):
+        """
+        To initialise we create a config parser object with the default 
+        player and save it to a file if it does not exist
+        """
         self.basedir = "~/.podcast"
 
         self.user_config_dir = os.path.expanduser(self.basedir);
