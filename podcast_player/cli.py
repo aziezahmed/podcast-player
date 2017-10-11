@@ -64,8 +64,10 @@ def add_podcast(url):
 def play_podcast():
     """
     The play command.
-    Here we will list the podcasts and ask the user which podcast they want to listen to.
-    Then we will list the episodes of that podcast and ask the user which episode they want to listen to.
+    Here we will list the podcasts and ask the user which podcast they want to
+    listen to.
+    Then we will list the episodes of that podcast and ask the user which
+    episode they want to listen to.
     After that we will stream that episode in mpv.
     """
     podcast_urls = PodcastDatabase.get_podcast_urls(PodcastDatabase)
@@ -88,6 +90,7 @@ def play_podcast():
     user_settings = UserSettings()
     player = user_settings.get_media_player()
 
+    clear_terminal()
     os.system(player + " "+ url)
     sys.exit(0)
 
@@ -98,10 +101,18 @@ def main():
     """
 
     basedir = "~/.podcast"
+    path = basedir + os.sep + 'podcast.sqlite'
 
-    PodcastDatabase._connection = sqlite.builder()(expanduser(basedir + os.sep + 'podcast.sqlite'), debug=False)
+    # If the ~/.podcast directory does not exist, let's create it.
+    if not os.path.exists(expanduser(basedir)):
+        print("Creating base dir %s"%basedir)
+        os.makedirs(expanduser(basedir))
+
+    # Make a connection to the DB. Create it if it does not exist
+    PodcastDatabase._connection = sqlite.builder()(expanduser(path), debug=False)
     PodcastDatabase.createTable(ifNotExists=True)
 
+    # Run the docopt
     options = docopt(__doc__, version=VERSION)
 
     if(options["list"]):
