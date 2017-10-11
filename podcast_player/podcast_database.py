@@ -49,7 +49,13 @@ class PodcastDatabase(SQLObject):
         Parameters
         ----------
         podcast_url : string
-            The URL that you want to add to the database. The name is retreived from the feed title.
+            The URL that you want to add to the database. The name is retreived
+            from the feed title.
         """
         feed = feedparser.parse(podcast_url)
-        PodcastDatabase(name=feed.feed.title, url=podcast_url)
+        name=feed.feed.title
+        url=podcast_url
+
+        check_db = self.select (self.q.name == name).count()
+        if check_db == 0:
+            PodcastDatabase(name=name,url=url)
