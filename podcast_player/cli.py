@@ -62,10 +62,9 @@ def play_podcast(url, choice):
     os.system(player + " "+ url)
     episode_menu(choice)
 
-def episode_menu(choice):
-    episode_choice = choice
+def episode_menu(podcast_choice):
     podcast_urls = PodcastDatabase.get_podcast_urls(PodcastDatabase)
-    feed = feedparser.parse(podcast_urls[int(choice)-1])
+    feed = feedparser.parse(podcast_urls[int(podcast_choice)-1])
     feed.entries.reverse()
     os.system('clear')
     for index, entry in enumerate(feed.entries):
@@ -79,7 +78,7 @@ def episode_menu(choice):
         podcast_menu()
     else:
         url = feed.entries[int(choice)-1]["link"]
-        play_podcast(url, episode_choice)
+        play_podcast(url, podcast_choice)
 
 def podcast_menu():
     podcast_names = PodcastDatabase.get_podcast_names(PodcastDatabase)
