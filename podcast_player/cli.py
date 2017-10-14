@@ -54,31 +54,34 @@ def add_podcast(url):
     """
     PodcastDatabase.add_podcast(PodcastDatabase, url)
 
-def play_podcast(url, choice):
+def play_podcast(url):
     user_settings = UserSettings()
     player = user_settings.get_media_player()
 
     os.system('clear')
     os.system(player + " "+ url)
-    episode_menu(choice)
+    
 
 def episode_menu(podcast_choice):
     podcast_urls = PodcastDatabase.get_podcast_urls(PodcastDatabase)
     feed = feedparser.parse(podcast_urls[int(podcast_choice)-1])
     feed.entries.reverse()
-    os.system('clear')
-    for index, entry in enumerate(feed.entries):
-        print(str(index+1) + " - " + entry['title'])
-    print("b - Back")
-    print("q - Quit")
-    choice = input(">>  ")
-    if choice.lower() == "q":
-        sys.exit(0)
-    elif choice.lower() == "b":
-        podcast_menu()
-    else:
-        url = feed.entries[int(choice)-1]["link"]
-        play_podcast(url, podcast_choice)
+    
+    choice = ""
+    while choice != "b":
+        os.system('clear')
+        for index, entry in enumerate(feed.entries):
+            print(str(index+1) + " - " + entry['title'])
+        print("b - Back")
+        print("q - Quit")
+        choice = input(">>  ")
+        if choice.lower() == "q":
+            sys.exit(0)
+        elif choice.lower() != "b":
+            url = feed.entries[int(choice)-1]["link"]
+            play_podcast(url)
+    podcast_menu()
+    
 
 def podcast_menu():
     podcast_names = PodcastDatabase.get_podcast_names(PodcastDatabase)
