@@ -1,7 +1,7 @@
 Podcast Player
 ==============
 
-*A command line application for displaying news headlines, written in Python.*
+*A command line podcast player, written in Python.*
 
 Getting Started
 ---------------
