@@ -2,11 +2,10 @@
 podcast
 
 Usage:
-  podcast play
+  podcast
   podcast list
-  podcast download
   podcast add <url>
-  podcast remove
+  podcast set-player <player>
   podcast -h | --help
   podcast --version
 
@@ -15,8 +14,11 @@ Options:
   --version                         Show version.
 
 Examples:
+  podcast
   podcast list
-  podcast add <url>
+  podcast set-player mpv
+  podcast set-player mplayer
+  podcast add https://my-podcast-url.com/feed.rss
 
 Help:
   For help using this tool, please open an issue on the Github repository:
@@ -53,6 +55,10 @@ def add_podcast(url):
         The URL of the podcast to subscribe to.
     """
     PodcastDatabase.add_podcast(PodcastDatabase, url)
+
+def set_player(player):
+    user_settings = UserSettings()
+    user_settings.set_media_player(player)
 
 def play_podcast(url):
     user_settings = UserSettings()
@@ -123,5 +129,8 @@ def main():
     elif(options["add"]):
         add_podcast(options["<url>"])
 
-    elif(options["play"]):
+    elif(options["set-player"]):
+        set_player(options["<player>"])
+
+    else:
         podcast_menu()
