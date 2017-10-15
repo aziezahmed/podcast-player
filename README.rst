@@ -39,11 +39,11 @@ The default audio player is mplayer. If desired you can change that.
 Usage
 ~~~~~
 
-Once you have added all the podcasts you want to sbscribe to, then simply run the 'podcast' command to select the podcast and the episode you want to listen to.
+Once you have added all the podcasts you want to subscribe to, then simply run the 'podcast' command to select the podcast and the episode you want to listen to.
 
 .. code-block:: bash
 
-    $ pip install podcast-player
+    $ podcast
 
 
 Built With
