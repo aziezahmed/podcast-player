@@ -1,6 +1,5 @@
 """Packaging settings."""
 
-
 from codecs import open
 from os.path import abspath, dirname, join
 from subprocess import call
@@ -33,7 +32,7 @@ class RunTests(Command):
 
 
 setup(
-    name = 'podcast',
+    name = 'podcast-player',
     version = __version__,
     description = 'A Python CLI podcast manager.',
     long_description = long_description,
