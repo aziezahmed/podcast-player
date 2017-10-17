@@ -1,6 +1,8 @@
 Podcast Player
 ==============
 
+|PyPI version|
+
 *A command line podcast player, written in Python.*
 
 Getting Started
@@ -26,13 +28,13 @@ Setup
 
 To begin we need to add some podcast rss feeds and set the desired audio player (optional)
 
-.. Code-block:: bash
+.. code-block:: bash
 
     $ podcast add URL
 
 The default audio player is mplayer. If desired you can change that.
 
-.. Code-block:: bash
+.. code-block:: bash
 
     $ podcast set-player mpv
 
@@ -44,6 +46,37 @@ Once you have added all the podcasts you want to subscribe to, then simply run t
 .. code-block:: bash
 
     $ podcast
+
+For more details run with the help option
+
+.. code-block:: bash
+		
+    $ podcast --help
+
+    podcast
+
+    Usage:
+      podcast
+      podcast list
+      podcast add <url>
+      podcast set-player <player>
+      podcast -h | --help
+      podcast --version
+
+    Options:
+      -h --help                         Show this screen.
+      --version                         Show version.
+
+    Examples:
+      podcast
+      podcast list
+      podcast set-player mpv
+      podcast set-player mplayer
+      podcast add https://my-podcast-url.com/feed.rss
+
+    Help:
+      For help using this tool, please open an issue on the Github repository:
+      https://github.com/aziezahmed/podcast-manager  
 
 
 Built With
@@ -65,3 +98,5 @@ This project is licensed under the MIT License
 .. _PyPi: https://pypi.python.org/pypi
 .. _skele-cli: https://github.com/rdegges/skele-cli
 .. _Aziez Ahmed Chawdhary: https://github.com/aziezahmed
+.. |PyPI version| image:: https://badge.fury.io/py/podcast-player.svg
+   :target: https://badge.fury.io/py/podcast-player
