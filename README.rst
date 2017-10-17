@@ -98,5 +98,5 @@ This project is licensed under the MIT License
 .. _PyPi: https://pypi.python.org/pypi
 .. _skele-cli: https://github.com/rdegges/skele-cli
 .. _Aziez Ahmed Chawdhary: https://github.com/aziezahmed
-.. |PyPI version| image:: https://badge.fury.io/py/podcast-player.svg
-   :target: https://badge.fury.io/py/podcast-player
+.. |PyPI version| image:: https://img.shields.io/pypi/v/openweathermap-cli.svg
+   :target: https://pypi.python.org/pypi/podcast-player
