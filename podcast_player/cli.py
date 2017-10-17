@@ -22,7 +22,7 @@ Examples:
 
 Help:
   For help using this tool, please open an issue on the Github repository:
-  https://github.com/aziezahmed/podcast-manager
+  https://github.com/aziezahmed/podcast-player
 """
 import os
 import sys
