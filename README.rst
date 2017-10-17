@@ -17,7 +17,7 @@ Prerequisites
 Installing
 ~~~~~~~~~~
 
-Podcast Player is on PyPi so it can be installed with pip.
+Podcast Player is on PyPI so it can be installed with pip.
 
 .. code-block:: bash
 
