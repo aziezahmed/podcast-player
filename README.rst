@@ -26,7 +26,7 @@ Podcast Player is on PyPI so it can be installed with pip.
 Setup
 ~~~~~
 
-To begin we need to add some podcast rss feeds and set the desired audio player (optional)
+To begin we need to add some podcast rss feeds. This is done one by one with the following command.
 
 .. code-block:: bash
 
