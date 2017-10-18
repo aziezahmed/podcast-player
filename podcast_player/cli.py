@@ -31,19 +31,21 @@ import feedparser
 from docopt import docopt
 from os.path import expanduser
 from sqlobject import *
+import feedparser
 
 from . import __version__ as VERSION
 from . import PodcastDatabase
 from . import UserSettings
 
+
 def list_podcasts():
     """
     List the names of all the subscribed podcasts.
     """
-    podcasts = PodcastDatabase.get_podcast_names(PodcastDatabase)
-    os.system('clear')
+
+    podcasts = list(PodcastDatabase.select())
     for podcast in podcasts:
-        print(podcast)
+        print(podcast.name)
 
 def add_podcast(url):
     """
@@ -54,7 +56,23 @@ def add_podcast(url):
     url : string
         The URL of the podcast to subscribe to.
     """
-    PodcastDatabase.add_podcast(PodcastDatabase, url)
+
+    feed = feedparser.parse(url)
+    name=feed.feed.title
+    new_feed = PodcastDatabase(name=name, url=url)
+
+
+def handle_choice():
+    choice = input(">>  ")
+    choice = choice.lower()
+    if choice == "q":
+        sys.exit(0)
+    elif choice == "b":
+        podcast_menu()
+    elif choice == "":
+        return handle_choice()
+    else:
+        return choice
 
 def set_player(player):
     user_settings = UserSettings()
@@ -63,44 +81,32 @@ def set_player(player):
 def play_podcast(url):
     user_settings = UserSettings()
     player = user_settings.get_media_player()
-
     os.system('clear')
     os.system(player + " "+ url)
-    
 
-def episode_menu(podcast_choice):
-    podcast_urls = PodcastDatabase.get_podcast_urls(PodcastDatabase)
-    feed = feedparser.parse(podcast_urls[int(podcast_choice)-1])
+def episode_menu(podcast):
+    feed = feedparser.parse(podcast.url)
     feed.entries.reverse()
-    
     choice = ""
-    while choice != "b":
-        os.system('clear')
-        for index, entry in enumerate(feed.entries):
-            print(str(index+1) + " - " + entry['title'])
-        print("b - Back")
-        print("q - Quit")
-        choice = input(">>  ")
-        if choice.lower() == "q":
-            sys.exit(0)
-        elif choice.lower() != "b":
-            url = feed.entries[int(choice)-1]["link"]
-            play_podcast(url)
-    podcast_menu()
-    
+    os.system('clear')
+    print(podcast.name)
+    for index, entry in enumerate(feed.entries):
+        print(str(index+1) + " - " + entry['title'])
+    print("b - Back")
+    print("q - Quit")
+    choice = handle_choice()
+    url = feed.entries[int(choice)-1]["link"]
+    play_podcast(url)
+    episode_menu(podcast)
 
 def podcast_menu():
-    podcast_names = PodcastDatabase.get_podcast_names(PodcastDatabase)
     os.system('clear')
-    for index, name in enumerate(podcast_names):
-        print(str(index+1) + " - " + name)
+    podcasts = PodcastDatabase.select()
+    for podcast in podcasts:
+        print(str(podcast.id) + " - " + podcast.name)
     print("q - Quit")
-    choice = input(">>  ")
-    if choice.lower() == "q":
-        sys.exit(0)
-    else:
-        episode_menu(choice)
-
+    choice = handle_choice()
+    episode_menu(PodcastDatabase.get(choice))
 
 def main():
     """
