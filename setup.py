@@ -39,7 +39,7 @@ setup(
     url = 'https://github.com/aziezahmed/podcast-player',
     author = 'Aziez Ahmed Chawdhary',
     author_email = '',
-    license='MIT License',
+    license = 'MIT License',
     classifiers = [
         'Intended Audience :: Developers',
         'Topic :: Utilities',
