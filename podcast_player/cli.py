@@ -71,8 +71,10 @@ def handle_choice():
         podcast_menu()
     elif choice == "":
         return handle_choice()
+    elif not choice.isdigit():
+        return handle_choice()
     else:
-        return choice
+        return int(choice)
 
 def set_player(player):
     user_settings = UserSettings()
@@ -95,7 +97,7 @@ def episode_menu(podcast):
     print("b - Back")
     print("q - Quit")
     choice = handle_choice()
-    url = feed.entries[int(choice)-1]["link"]
+    url = feed.entries[choice-1]["link"]
     play_podcast(url)
     episode_menu(podcast)
 
