@@ -15,7 +15,7 @@ class UserSettings(object):
 
         self.config = configparser.ConfigParser()
         self.config.add_section('podcast')
-        self.config['podcast']['player'] = "mplayer"
+        self.config['podcast']['player'] = "mpv --no-video"
 
         if not os.path.isfile(self.user_config_path):
             with open(self.user_config_path, 'w') as f:
