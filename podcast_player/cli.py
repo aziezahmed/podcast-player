@@ -63,6 +63,10 @@ def add_podcast(url):
 
 
 def handle_choice():
+    """
+    Save the preferred media player in the user settings
+    """
+
     choice = input(">>  ")
     choice = choice.lower()
     if choice == "q":
@@ -77,42 +81,79 @@ def handle_choice():
         return int(choice)
 
 def set_player(player):
+    """
+    Save the preferred media player in the user settings
+
+    Parameters
+    ----------
+    player : string
+        The player that we pass the media url to when we play a podcast.
+    """
+
     user_settings = UserSettings()
     user_settings.set_media_player(player)
 
 def play_podcast(url):
+    """
+    Play the podcast using the user's preferred player
+    """
+
     user_settings = UserSettings()
     player = user_settings.get_media_player()
     os.system('clear')
     os.system(player + " "+ url)
 
+def get_episode_media_url(podcast_entry):
+    """
+    Extract the media URL from the podcast entry
+
+    Parameters
+    ----------
+    podcast_entry : object
+        The entry object from the feed.
+    """
+
+    links = podcast_entry["links"]
+    for link in links:
+        if "audio" in link["type"]:
+            return link["href"]
+
 def episode_menu(podcast):
     """
-    The episode menu 
+    The episode menu
     Here we list all the episodes tof the selected poodcast
     and allow the user to choose which one they want to listen to
+
+    Parameters
+    ----------
+    podcast : PodcastDatabase
+        The podcast entry from the database
     """
+
     feed = feedparser.parse(podcast.url)
     feed.entries.reverse()
     choice = ""
     os.system('clear')
-    print(podcast.name)
+
     for index, entry in enumerate(feed.entries):
         print(str(index+1) + " - " + entry['title'])
     print("b - Back")
     print("q - Quit")
     choice = handle_choice()
-    url = feed.entries[choice-1]["link"]
+
+    entry = feed.entries[choice-1]
+    url = get_episode_media_url(entry)
     play_podcast(url)
     episode_menu(podcast)
 
 def podcast_menu():
     """
-    The main menu 
+    The main menu
     Here we list all the podcasts that the user is subscribed to
     and allow the user to choose which one they want to see the episodes of
     At that point we move to the episode menu
     """
+
     os.system('clear')
     podcasts = PodcastDatabase.select()
     for podcast in podcasts:
