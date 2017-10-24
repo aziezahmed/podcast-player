@@ -32,11 +32,11 @@ To begin we need to add some podcast rss feeds. This is done one by one with the
 
     $ podcast add URL
 
-The default audio player is mplayer. If desired you can change that.
+The default audio player is mpv in no-video mode. If desired you can change that.
 
 .. code-block:: bash
 
-    $ podcast set-player mpv
+    $ podcast set-player mplayer
 
 Usage
 ~~~~~
