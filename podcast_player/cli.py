@@ -87,6 +87,11 @@ def play_podcast(url):
     os.system(player + " "+ url)
 
 def episode_menu(podcast):
+    """
+    The episode menu 
+    Here we list all the episodes tof the selected poodcast
+    and allow the user to choose which one they want to listen to
+    """
     feed = feedparser.parse(podcast.url)
     feed.entries.reverse()
     choice = ""
@@ -102,6 +107,12 @@ def episode_menu(podcast):
     episode_menu(podcast)
 
 def podcast_menu():
+    """
+    The main menu 
+    Here we list all the podcasts that the user is subscribed to
+    and allow the user to choose which one they want to see the episodes of
+    At that point we move to the episode menu
+    """
     os.system('clear')
     podcasts = PodcastDatabase.select()
     for podcast in podcasts:
