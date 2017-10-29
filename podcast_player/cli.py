@@ -135,8 +135,10 @@ def episode_menu(podcast):
     choice = ""
     os.system('clear')
 
-    for index, entry in enumerate(feed.entries):
-        print(str(index+1) + " - " + entry['title'])
+    reverse_counter = len(feed.entries)
+    for entry in feed.entries:
+        print(str(reverse_counter) + " - " + entry['title'])
+        reverse_counter = reverse_counter - 1
     print("b - Back")
     print("q - Quit")
     choice = handle_choice()
