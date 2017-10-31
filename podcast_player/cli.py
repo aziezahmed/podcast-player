@@ -121,7 +121,7 @@ def get_episode_media_url(podcast_entry):
 def episode_menu(podcast):
     """
     The episode menu
-    Here we list all the episodes tof the selected poodcast
+    Here we list all the episodes of the selected podcast
     and allow the user to choose which one they want to listen to
 
     Parameters
@@ -142,11 +142,14 @@ def episode_menu(podcast):
     print("[ q ] - Quit")
 
     choice = handle_choice()
+    choice = choice - 1
+    
+    if(0 <= choice < len(feed.entries)):
+        entry = feed.entries[choice]
+        url = get_episode_media_url(entry)
+        play_podcast(url)
 
-    entry = feed.entries[choice-1]
-    url = get_episode_media_url(entry)
-    play_podcast(url)
-    episode_menu(podcast)
+    episode_menu(podcast)   
  
 def podcast_menu():
     """
@@ -162,7 +165,13 @@ def podcast_menu():
         print("[ " + str(podcast.id) + " ] - " + podcast.name)
     print("\n[ q ] - Quit")
     choice = handle_choice()
-    episode_menu(PodcastDatabase.get(choice))
+
+    podcast_check_list = list(PodcastDatabase.select(PodcastDatabase.q.id == choice))
+    
+    if len(podcast_check_list) == 0:
+        podcast_menu()
+    else:
+        episode_menu(PodcastDatabase.get(choice))        
 
 def main():
     """
