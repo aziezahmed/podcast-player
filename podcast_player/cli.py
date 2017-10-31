@@ -131,16 +131,16 @@ def episode_menu(podcast):
     """
 
     feed = feedparser.parse(podcast.url)
-    feed.entries.reverse()
-    choice = ""
+
     os.system('clear')
 
-    reverse_counter = len(feed.entries)
-    for entry in feed.entries:
-        print(str(reverse_counter) + " - " + entry['title'])
-        reverse_counter = reverse_counter - 1
+    for entry in feed.entries[::-1]:
+        index = feed.entries.index(entry) + 1
+        print(str(index) + " - " + entry['title'])
+
     print("b - Back")
     print("q - Quit")
+    
     choice = handle_choice()
 
     entry = feed.entries[choice-1]
