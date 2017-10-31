@@ -136,18 +136,18 @@ def episode_menu(podcast):
 
     for entry in feed.entries[::-1]:
         index = feed.entries.index(entry) + 1
-        print(str(index) + " - " + entry['title'])
+        print("[ " + str(index) + " ] - " + entry['title'])
+        
+    print("\n[ b ] - Back")
+    print("[ q ] - Quit")
 
-    print("b - Back")
-    print("q - Quit")
-    
     choice = handle_choice()
 
     entry = feed.entries[choice-1]
     url = get_episode_media_url(entry)
     play_podcast(url)
     episode_menu(podcast)
-
+ 
 def podcast_menu():
     """
     The main menu
@@ -159,8 +159,8 @@ def podcast_menu():
     os.system('clear')
     podcasts = PodcastDatabase.select()
     for podcast in podcasts:
-        print(str(podcast.id) + " - " + podcast.name)
-    print("q - Quit")
+        print("[ " + str(podcast.id) + " ] - " + podcast.name)
+    print("\n[ q ] - Quit")
     choice = handle_choice()
     episode_menu(PodcastDatabase.get(choice))
 
