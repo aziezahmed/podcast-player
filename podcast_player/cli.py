@@ -4,6 +4,7 @@ podcast
 Usage:
   podcast
   podcast list
+  podcast delete
   podcast add <url>
   podcast set-player <player>
   podcast -h | --help
@@ -61,6 +62,26 @@ def add_podcast(url):
     name=feed.feed.title
     new_feed = PodcastDatabase(name=name, url=url)
 
+def delete_podcast_menu():
+    """
+    The delete menu
+    Here we list all the podcasts that the user is subscribed to
+    and allow the user to choose which one they want to delete
+    """
+
+    os.system('clear')
+    podcasts = PodcastDatabase.select()
+    for podcast in podcasts:
+        print("[ " + str(podcast.id) + " ] - " + podcast.name)
+    print("\n[ q ] - Quit")
+    choice = handle_choice()
+
+    podcast_check_list = list(PodcastDatabase.select(PodcastDatabase.q.id == choice))
+    
+    if len(podcast_check_list) == 0:
+        delete_podcast_menu()
+    else:
+        PodcastDatabase.delete(choice) 
 
 def handle_choice():
     """
@@ -172,6 +193,7 @@ def podcast_menu():
         podcast_menu()
     else:
         episode_menu(PodcastDatabase.get(choice))        
+          
 
 def main():
     """
@@ -199,6 +221,9 @@ def main():
 
     elif(options["add"]):
         add_podcast(options["<url>"])
+    
+    elif(options["delete"]):
+        delete_podcast_menu()
 
     elif(options["set-player"]):
         set_player(options["<player>"])
