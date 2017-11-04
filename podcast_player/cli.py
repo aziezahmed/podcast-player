@@ -47,6 +47,8 @@ def list_podcasts():
     podcasts = list(PodcastDatabase.select())
     for podcast in podcasts:
         print(podcast.name)
+        print(podcast.url)
+        print("-"*len(podcast.url))
 
 def add_podcast(url):
     """
