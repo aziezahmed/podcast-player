@@ -76,6 +76,7 @@ def delete_podcast_menu():
     for podcast in podcasts:
         print("[ " + str(podcast.id) + " ] - " + podcast.name)
     print("\n[ q ] - Quit")
+    print("\nEnter the id of the podcast you wish to delete.")
     choice = handle_choice()
 
     podcast_check_list = list(PodcastDatabase.select(PodcastDatabase.q.id == choice))
@@ -164,7 +165,7 @@ def episode_menu(podcast):
         
     print("\n[ b ] - Back")
     print("[ q ] - Quit")
-
+    print("\nEnter the number of the episode you wish to listen to.")
     choice = handle_choice()
     choice = choice - 1
     
@@ -192,6 +193,7 @@ def podcast_menu():
         print("[ " + str(index+1) + " ] - " + podcast.name)
 
     print("\n[ q ] - Quit")
+    print("\nEnter the number of the podcast you wish to listen to.")
     choice = handle_choice()
     choice = choice - 1
 
