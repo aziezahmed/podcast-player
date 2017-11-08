@@ -157,9 +157,10 @@ def episode_menu(podcast):
 
     os.system('clear')
 
-    for entry in feed.entries[::-1]:
-        index = feed.entries.index(entry) + 1
-        print("[ " + str(index) + " ] - " + entry['title'])
+    feed.entries.reverse()
+
+    for index, entry in enumerate(feed.entries):
+        print("[ " + str(index+1) + " ] - " + entry['title'])
         
     print("\n[ b ] - Back")
     print("[ q ] - Quit")
@@ -184,18 +185,21 @@ def podcast_menu():
 
     os.system('clear')
     podcasts = PodcastDatabase.select()
-    for podcast in podcasts:
-        print("[ " + str(podcast.id) + " ] - " + podcast.name)
+    
+    podcast_array = []
+    for index, podcast in enumerate(podcasts):
+        podcast_array.append(podcast)
+        print("[ " + str(index+1) + " ] - " + podcast.name)
+
     print("\n[ q ] - Quit")
     choice = handle_choice()
+    choice = choice - 1
 
-    podcast_check_list = list(PodcastDatabase.select(PodcastDatabase.q.id == choice))
-    
-    if len(podcast_check_list) == 0:
-        podcast_menu()
+    if(0 <= choice < len(podcast_array)):
+        episode_menu(podcast_array[choice])  
     else:
-        episode_menu(PodcastDatabase.get(choice))        
-          
+        podcast_menu()
+
 
 def main():
     """
