@@ -56,7 +56,7 @@ For more details run with the help option
     podcast
 
     Usage:
-      podcast
+      podcast play
       podcast list
       podcast add <url>
       podcast set-player <player>
@@ -68,7 +68,7 @@ For more details run with the help option
       --version                         Show version.
 
     Examples:
-      podcast
+      podcast play
       podcast list
       podcast set-player mpv
       podcast set-player mplayer
