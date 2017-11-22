@@ -2,7 +2,7 @@
 podcast
 
 Usage:
-  podcast
+  podcast play
   podcast list
   podcast delete
   podcast add <url>
@@ -15,7 +15,7 @@ Options:
   --version                         Show version.
 
 Examples:
-  podcast
+  podcast play
   podcast list
   podcast set-player mpv
   podcast set-player mplayer
@@ -244,5 +244,5 @@ def main():
     elif(options["set-player"]):
         set_player(options["<player>"])
 
-    else:
+    elif(options["play"]):
         podcast_menu()
