@@ -73,6 +73,11 @@ def delete_podcast_menu():
 
     os.system('clear')
     podcasts = PodcastDatabase.select()
+    
+    if podcasts.count() == 0:
+        print("There are no podcasts to delete!\n")
+        sys.exit(0)
+    
     for podcast in podcasts:
         print("[ " + str(podcast.id) + " ] - " + podcast.name)
     print("\n[ q ] - Quit")
@@ -191,7 +196,6 @@ def podcast_menu():
         print("There are no podcast feeds found.")
         print("To add a podcast use the 'add' parameter:\n")
         print("podcast add http://www.mypodcast.com/feed.rss\n")
-        
         sys.exit(0)
     
     podcast_array = []
