@@ -187,7 +187,15 @@ def podcast_menu():
     os.system('clear')
     podcasts = PodcastDatabase.select()
     
+    if podcasts.count() == 0:
+        print("There are no podcast feeds found.")
+        print("To add a podcast use the 'add' parameter:\n")
+        print("podcast add http://www.mypodcast.com/feed.rss\n")
+        
+        sys.exit(0)
+    
     podcast_array = []
+    
     for index, podcast in enumerate(podcasts):
         podcast_array.append(podcast)
         print("[ " + str(index+1) + " ] - " + podcast.name)
