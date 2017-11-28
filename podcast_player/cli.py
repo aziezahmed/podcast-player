@@ -2,9 +2,7 @@
 podcast
 
 Usage:
-  podcast play
-  podcast list
-  podcast delete
+  podcast
   podcast add <url>
   podcast set-player <player>
   podcast -h | --help
@@ -15,8 +13,7 @@ Options:
   --version                         Show version.
 
 Examples:
-  podcast play
-  podcast list
+  podcast 
   podcast set-player mpv
   podcast set-player mplayer
   podcast add https://my-podcast-url.com/feed.rss
@@ -236,17 +233,11 @@ def main():
     # Run the docopt
     options = docopt(__doc__, version=VERSION)
 
-    if(options["list"]):
-        list_podcasts()
-
-    elif(options["add"]):
+    if(options["add"]):
         add_podcast(options["<url>"])
-    
-    elif(options["delete"]):
-        delete_podcast_menu()
 
     elif(options["set-player"]):
         set_player(options["<player>"])
 
-    elif(options["play"]):
+    else:
         podcast_menu()
