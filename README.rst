@@ -23,6 +23,13 @@ Podcast Player is on PyPI so it can be installed with pip.
 
     $ pip install podcast-player
 
+If you see an error related with the following: ImportError: No module named sqlobject, then you could try and install sqlobject first.
+
+.. code-block:: bash
+
+    $ pip install sqlobject
+    $ pip install podcast-player
+
 Setup
 ~~~~~
 
