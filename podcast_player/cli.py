@@ -32,7 +32,6 @@ from sqlobject import *
 import feedparser
 
 from . import __version__ as VERSION
-from . import PodcastDatabase
 from . import UserSettings
 
 class PodcastDatabase(SQLObject):
