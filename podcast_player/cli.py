@@ -35,6 +35,10 @@ from . import __version__ as VERSION
 from . import PodcastDatabase
 from . import UserSettings
 
+class PodcastDatabase(SQLObject):
+    """A database of podcast names and urls."""
+    name = StringCol()
+    url = StringCol()
 
 def list_podcasts():
     """
