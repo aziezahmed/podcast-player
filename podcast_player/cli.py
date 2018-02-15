@@ -4,6 +4,7 @@ podcast
 Usage:
   podcast
   podcast add <url>
+  podcast opml <opml>
   podcast set-player <player>
   podcast -h | --help
   podcast --version
@@ -30,6 +31,7 @@ from docopt import docopt
 from os.path import expanduser
 from sqlobject import *
 import feedparser
+import listparser
 
 from . import __version__ as VERSION
 from . import UserSettings
@@ -64,6 +66,23 @@ def add_podcast(url):
     name=feed.feed.title
     new_feed = PodcastDatabase(name=name, url=url)
 
+def import_opml(opml_file):
+    """
+    Import feeds from an opml file
+    
+    Parameters
+    ----------
+    opml_file : string
+        The relative path to the opml file that we want to import. 
+
+    """
+    print("importing " + opml_file)
+    
+    new_feeds = listparser.parse(opml_file)
+    for feed in new_feeds.feeds:
+        print(feed.url)
+        add_podcast(feed.url)
+    
 def delete_podcast_menu():
     """
     The delete menu
@@ -236,11 +255,16 @@ def main():
     # Run the docopt
     options = docopt(__doc__, version=VERSION)
 
+
+    
     if(options["add"]):
         add_podcast(options["<url>"])
 
     elif(options["set-player"]):
         set_player(options["<player>"])
 
+    elif(options["opml"]):
+        import_opml(options["<opml>"])
+        
     else:
         podcast_menu()
