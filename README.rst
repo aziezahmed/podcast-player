@@ -33,6 +33,12 @@ To begin we need to add some podcast rss feeds. This is done one by one with the
 
     $ podcast add URL
 
+If you have an OPML file with podcast subscriptions that you would like to import then you can do so with the opml argument.
+
+.. code-block:: bash
+
+    $ podcast opml OPMLFILE
+
 The default audio player is mpv in no-video mode. If desired you can change that.
 
 .. code-block:: bash
