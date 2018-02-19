@@ -255,8 +255,6 @@ def main():
     # Run the docopt
     options = docopt(__doc__, version=VERSION)
 
-    print(options)
-    
     if(options["add"]):
         add_podcast(options["<url>"])
 
