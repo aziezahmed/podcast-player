@@ -4,8 +4,8 @@ podcast
 Usage:
   podcast
   podcast add <url>
-  podcast opml <opml>
   podcast set-player <player>
+  podcast -i <opml>
   podcast -h | --help
   podcast --version
 
@@ -255,7 +255,7 @@ def main():
     # Run the docopt
     options = docopt(__doc__, version=VERSION)
 
-
+    print(options)
     
     if(options["add"]):
         add_podcast(options["<url>"])
@@ -263,7 +263,7 @@ def main():
     elif(options["set-player"]):
         set_player(options["<player>"])
 
-    elif(options["opml"]):
+    elif(options["-i"]):
         import_opml(options["<opml>"])
         
     else:
