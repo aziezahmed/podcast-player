@@ -65,8 +65,8 @@ For more details run with the help option
     Usage:
       podcast
       podcast add <url>
-      podcast opml <opml>
       podcast set-player <player>
+      podcast -i <opml-file>
       podcast -h | --help
       podcast --version
 

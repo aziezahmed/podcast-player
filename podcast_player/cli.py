@@ -5,7 +5,7 @@ Usage:
   podcast
   podcast add <url>
   podcast set-player <player>
-  podcast -i <opml>
+  podcast -i <opml-file>
   podcast -h | --help
   podcast --version
 
@@ -262,7 +262,7 @@ def main():
         set_player(options["<player>"])
 
     elif(options["-i"]):
-        import_opml(options["<opml>"])
+        import_opml(options["<opml-file>"])
         
     else:
         podcast_menu()
