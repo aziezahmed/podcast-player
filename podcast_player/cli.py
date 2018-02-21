@@ -30,6 +30,8 @@ import feedparser
 from docopt import docopt
 from os.path import expanduser
 from sqlobject import *
+from tabulate import tabulate
+
 import feedparser
 import listparser
 
@@ -184,12 +186,17 @@ def episode_menu(podcast):
 
     feed.entries.reverse()
 
+    table = []
+    headers = ["choice","title"]
+    
     for index, entry in enumerate(feed.entries):
-        print("[ " + str(index+1) + " ] - " + entry['title'])
+        table.append([str(index+1), entry['title']])
+           
+    print(tabulate(table,headers,tablefmt="simple"))
         
-    print("\n[ b ] - Back")
-    print("[ q ] - Quit")
     print("\nEnter the number of the episode you wish to listen to.")
+    print("Enter b to go back or q to quit.")
+
     choice = handle_choice()
     choice = choice - 1
     
@@ -218,13 +225,18 @@ def podcast_menu():
         sys.exit(0)
     
     podcast_array = []
-    
+
+    table = []
+    headers = ["choice","title"]
+
     for index, podcast in enumerate(podcasts):
         podcast_array.append(podcast)
-        print("[ " + str(index+1) + " ] - " + podcast.name)
+        table.append([str(index+1), podcast.name])
 
-    print("\n[ q ] - Quit")
+    print(tabulate(table,headers,tablefmt="simple"))
+        
     print("\nEnter the number of the podcast you wish to listen to.")
+    print("Enter q to quit.")
     choice = handle_choice()
     choice = choice - 1
 
