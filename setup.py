@@ -59,7 +59,7 @@ setup(
     ],
     keywords = ["cli", "audio", "podcast", "stream"],
     packages = find_packages(exclude=['docs', 'tests*']),
-    install_requires = ['docopt', 'feedparser', 'listparser', 'sqlobject', 'configparser'],
+    install_requires = ['docopt', 'tabulate', 'feedparser', 'listparser', 'sqlobject', 'configparser'],
     extras_require = {
         'test': ['coverage', 'pytest', 'pytest-cov'],
     },
