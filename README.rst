@@ -23,6 +23,11 @@ Podcast Player is on PyPI so it can be installed with pip.
 
     $ pip install podcast-player
 
+To upgrade use the -U flag
+
+.. code-block:: bash
+
+    $ pip install -U podcast-player
 
 Setup
 ~~~~~
