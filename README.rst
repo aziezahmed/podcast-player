@@ -23,7 +23,7 @@ Podcast Player is on PyPI so it can be installed with pip.
 
     $ pip install podcast-player
 
-To upgrade use the -U flag
+To upgrade use the -U flag.
 
 .. code-block:: bash
 
@@ -59,7 +59,7 @@ Once you have added all the podcasts you want to subscribe to, then simply run t
 
     $ podcast
 
-For more details run with the help option
+For more details run with the help option.
 
 .. code-block:: bash
 		
