@@ -12,7 +12,7 @@ Prerequisites
 ~~~~~~~~~~~~~
 
 -  `Python`_
--  mpv or mplayer
+-  `mpv`_ or mplayer
 
 Installing
 ~~~~~~~~~~
@@ -109,5 +109,6 @@ This project is licensed under the MIT License
 .. _PyPi: https://pypi.python.org/pypi
 .. _skele-cli: https://github.com/rdegges/skele-cli
 .. _Aziez Ahmed Chawdhary: https://github.com/aziezahmed
+.. _mpv: https://mpv.io
 .. |PyPI version| image:: https://img.shields.io/pypi/v/podcast-player.svg
    :target: https://pypi.python.org/pypi/podcast-player
