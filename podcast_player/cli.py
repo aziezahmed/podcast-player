@@ -208,7 +208,8 @@ def episode_menu(podcast):
     if(0 <= choice < len(feed.entries)):
         entry = feed.entries[choice]
         url = get_episode_media_url(entry)
-        play_podcast(url)
+        if type(url) is str:
+            play_podcast(url)
 
     episode_menu(podcast)   
  
