@@ -54,9 +54,9 @@ def list_podcasts():
         print(podcast.url)
         print("-"*len(podcast.url))
 
-def add_podcast(url):
+def add_podcast( url):
     """
-    List the names of all the subscribed podcasts.
+    Add a podcast
 
     Parameters
     ----------
@@ -64,12 +64,15 @@ def add_podcast(url):
         The URL of the podcast to subscribe to.
     """
 
-    feed = feedparser.parse(url)
-    name=""
-    if hasattr(feed.feed, "title"):
-        name = feed.feed.title
-    new_feed = PodcastDatabase(name=name, url=url)
+    podcast_check_list = list(PodcastDatabase.select(PodcastDatabase.q.url == url))
 
+    if len(podcast_check_list) == 0:    
+        feed = feedparser.parse(url).feed
+        name = url
+        if hasattr(feed, "title"):
+            name = feed.title
+            new_feed = PodcastDatabase(name=name, url=url)
+            
 def import_opml(opml_file):
     """
     Import feeds from an opml file
