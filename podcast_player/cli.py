@@ -65,7 +65,9 @@ def add_podcast(url):
     """
 
     feed = feedparser.parse(url)
-    name=feed.feed.title
+    name=""
+    if hasattr(feed.feed, "title"):
+        name = feed.feed.title
     new_feed = PodcastDatabase(name=name, url=url)
 
 def import_opml(opml_file):
