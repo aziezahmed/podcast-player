@@ -4,6 +4,7 @@ podcast
 Usage:
   podcast
   podcast add <url>
+  podcast delete
   podcast set-player <player>
   podcast -i <opml-file>
   podcast -h | --help
@@ -23,6 +24,7 @@ Help:
   For help using this tool, please open an issue on the Github repository:
   https://github.com/aziezahmed/podcast-player
 """
+
 import os
 import sys
 import feedparser
@@ -30,31 +32,38 @@ import feedparser
 from docopt import docopt
 from os.path import expanduser
 from sqlobject import *
-from tabulate import tabulate
 
 import feedparser
 import listparser
 
+from PyInquirer import  prompt
+from pprint import pprint 
 from . import __version__ as VERSION
 from . import UserSettings
 
 class PodcastDatabase(SQLObject):
-    """A database of podcast names and urls."""
+    """A database of podcast names and urls."""    
     name = StringCol()
     url = StringCol()
 
-def list_podcasts():
+def setup():
     """
-    List the names of all the subscribed podcasts.
+    Inital Setup:
+    Create the database and make a connection to it
     """
+    basedir = "~/.podcast"
+    path = basedir + os.sep + 'podcast.sqlite'
 
-    podcasts = list(PodcastDatabase.select())
-    for podcast in podcasts:
-        print(podcast.name)
-        print(podcast.url)
-        print("-"*len(podcast.url))
+    # If the ~/.podcast directory does not exist, let's create it.
+    if not os.path.exists(expanduser(basedir)):
+        print("Creating base dir %s"%basedir)
+        os.makedirs(expanduser(basedir))
 
-def add_podcast( url):
+    # Make a connection to the DB. Create it if it does not exist
+    PodcastDatabase._connection = sqlite.builder()(expanduser(path), debug=False)
+    PodcastDatabase.createTable(ifNotExists=True)
+
+def add_podcast(url):
     """
     Add a podcast
 
@@ -62,11 +71,12 @@ def add_podcast( url):
     ----------
     url : string
         The URL of the podcast to subscribe to.
-    """
+    """    
+    # Look to see if the podcast is already in the directory
+    results = list(PodcastDatabase.select(PodcastDatabase.q.url == url))
 
-    podcast_check_list = list(PodcastDatabase.select(PodcastDatabase.q.url == url))
-
-    if len(podcast_check_list) == 0:    
+    # If it is not then we can add it
+    if len(results) == 0:    
         feed = feedparser.parse(url).feed
         name = url
         if hasattr(feed, "title"):
@@ -81,7 +91,6 @@ def import_opml(opml_file):
     ----------
     opml_file : string
         The relative path to the opml file that we want to import. 
-
     """
     print("importing " + opml_file)
     
@@ -89,51 +98,55 @@ def import_opml(opml_file):
     for feed in new_feeds.feeds:
         print(feed.url)
         add_podcast(feed.url)
+
+def handle_choice(answers, key):
+    """
+    Handle user input
+    """
+    # if there is no input then the user probably ctrl+c'ed out
+    if len(answers) == 0:
+        sys.exit(0)
     
+    # handle the back and quit
+    inp = answers[key]
+    if inp == "Back":
+        podcast_menu()
+    elif inp == "Quit":
+        sys.exit(0)
+
 def delete_podcast_menu():
     """
     The delete menu
     Here we list all the podcasts that the user is subscribed to
     and allow the user to choose which one they want to delete
     """
-
-    os.system('clear')
     podcasts = PodcastDatabase.select()
     
     if podcasts.count() == 0:
         print("There are no podcasts to delete!\n")
         sys.exit(0)
     
+    podcast_names = []
     for podcast in podcasts:
-        print("[ " + str(podcast.id) + " ] - " + podcast.name)
-    print("\n[ q ] - Quit")
-    print("\nEnter the id of the podcast you wish to delete.")
-    choice = handle_choice()
+        podcast_names.append({'name': podcast.name})
 
-    podcast_check_list = list(PodcastDatabase.select(PodcastDatabase.q.id == choice))
-    
-    if len(podcast_check_list) == 0:
-        delete_podcast_menu()
-    else:
-        PodcastDatabase.delete(choice) 
+    questions = [
+        {
+            'type': 'checkbox',
+            'name': 'podcasts',
+            'message': 'What episode do you want to listen to?',
+            'choices': podcast_names
+        }
+    ]
 
-def handle_choice():
-    """
-    Save the preferred media player in the user settings
-    """
+    answers = prompt(questions)
+    handle_choice(answers, 'podcasts')
 
-    choice = input(">>  ")
-    choice = choice.lower()
-    if choice == "q":
-        sys.exit(0)
-    elif choice == "b":
-        podcast_menu()
-    elif choice == "":
-        return handle_choice()
-    elif not choice.isdigit():
-        return handle_choice()
-    else:
-        return int(choice)
+    podcasts = answers["podcasts"]
+
+    for podcast in podcasts:
+        index = list(PodcastDatabase.select(PodcastDatabase.q.name == podcast))[0].id
+        PodcastDatabase.delete(index)
 
 def set_player(player):
     """
@@ -144,7 +157,6 @@ def set_player(player):
     player : string
         The player that we pass the media url to when we play a podcast.
     """
-
     user_settings = UserSettings()
     user_settings.set_media_player(player)
 
@@ -152,7 +164,6 @@ def play_podcast(url):
     """
     Play the podcast using the user's preferred player
     """
-
     user_settings = UserSettings()
     player = user_settings.get_media_player()
     os.system('clear')
@@ -167,8 +178,8 @@ def get_episode_media_url(podcast_entry):
     podcast_entry : object
         The entry object from the feed.
     """
-
     links = podcast_entry["links"]
+
     for link in links:
         if "audio" in link["type"]:
             return link["href"]
@@ -183,34 +194,34 @@ def episode_menu(podcast):
     ----------
     podcast : PodcastDatabase
         The podcast entry from the database
-    """
+    """    
+    feed = feedparser.parse(podcast.url)  
+    titles = []
 
-    feed = feedparser.parse(podcast.url)
-
-    os.system('clear')
-
-    feed.entries.reverse()
-
-    table = []
-    headers = ["choice","title"]
-    
     for index, entry in enumerate(feed.entries):
-        table.append([str(index+1), entry['title']])
-           
-    print(tabulate(table,headers,tablefmt="simple"))
-        
-    print("\nEnter the number of the episode you wish to listen to.")
-    print("Enter b to go back or q to quit.")
-
-    choice = handle_choice()
-    choice = choice - 1
+        titles.append(entry['title'])
     
-    if(0 <= choice < len(feed.entries)):
-        entry = feed.entries[choice]
-        url = get_episode_media_url(entry)
-        if type(url) is str:
-            play_podcast(url)
+    titles.append("Back")
+    titles.append("Quit")
 
+    questions = [
+        {
+            'type': 'list',
+            'name': 'episode',
+            'message': 'What episode do you want to listen to?',
+            'choices': titles
+        }
+    ]
+
+    answers = prompt(questions)
+    handle_choice(answers, 'episode')
+
+    choice = titles.index(answers["episode"])
+    entry = feed.entries[choice]
+    url = get_episode_media_url(entry)
+
+    if type(url) is str:
+        play_podcast(url)
     episode_menu(podcast)   
  
 def podcast_menu():
@@ -220,8 +231,6 @@ def podcast_menu():
     and allow the user to choose which one they want to see the episodes of
     At that point we move to the episode menu
     """
-
-    os.system('clear')
     podcasts = PodcastDatabase.select()
     
     if podcasts.count() == 0:
@@ -230,45 +239,34 @@ def podcast_menu():
         print("podcast add http://www.mypodcast.com/feed.rss\n")
         sys.exit(0)
     
-    podcast_array = []
-
-    table = []
-    headers = ["choice","title"]
+    podcast_names = []
 
     for index, podcast in enumerate(podcasts):
-        podcast_array.append(podcast)
-        table.append([str(index+1), podcast.name])
+        podcast_names.append(podcast.name)
 
-    print(tabulate(table,headers,tablefmt="simple"))
-        
-    print("\nEnter the number of the podcast you wish to listen to.")
-    print("Enter q to quit.")
-    choice = handle_choice()
-    choice = choice - 1
+    podcast_names.append("Quit")
 
-    if(0 <= choice < len(podcast_array)):
-        episode_menu(podcast_array[choice])  
-    else:
-        podcast_menu()
+    questions = [
+        {
+            'type': 'list',
+            'name': 'podcast',
+            'message': 'What podcast do you want to listen to?',
+            'choices': podcast_names
+        }
+    ]
 
+    answers = prompt(questions)
+    handle_choice(answers,'podcast')
+
+    podcast = PodcastDatabase.select(PodcastDatabase.q.name == answers["podcast"])
+    episode_menu(list(podcast)[0])
 
 def main():
     """
     The main function. We will establish a connnection to the database and
     process the user's command.
     """
-
-    basedir = "~/.podcast"
-    path = basedir + os.sep + 'podcast.sqlite'
-
-    # If the ~/.podcast directory does not exist, let's create it.
-    if not os.path.exists(expanduser(basedir)):
-        print("Creating base dir %s"%basedir)
-        os.makedirs(expanduser(basedir))
-
-    # Make a connection to the DB. Create it if it does not exist
-    PodcastDatabase._connection = sqlite.builder()(expanduser(path), debug=False)
-    PodcastDatabase.createTable(ifNotExists=True)
+    setup()
 
     # Run the docopt
     options = docopt(__doc__, version=VERSION)
@@ -278,6 +276,9 @@ def main():
 
     elif(options["set-player"]):
         set_player(options["<player>"])
+
+    elif(options["delete"]):
+        delete_podcast_menu()
 
     elif(options["-i"]):
         import_opml(options["<opml-file>"])
