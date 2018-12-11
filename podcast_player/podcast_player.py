@@ -13,6 +13,7 @@ from pprint import pprint
 from podcast_player.user_settings import UserSettings
 from podcast_player.database import PodcastDatabase
 
+from sqlobject import *
 
 class PodcastPlayer(object):
     def __init__(self):
