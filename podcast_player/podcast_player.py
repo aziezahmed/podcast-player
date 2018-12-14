@@ -104,7 +104,7 @@ class PodcastPlayer(object):
             {
                 'type': 'checkbox',
                 'name': 'podcasts',
-                'message': 'What episode do you want to listen to?',
+                'message': 'Select the podcasts you wish to delete and then press enter/return',
                 'choices': podcast_names
             }
         ]
