@@ -12,7 +12,7 @@ Prerequisites
 ~~~~~~~~~~~~~
 
 -  `Python`_
--  `mpv`_ or mplayer
+-  `mpv`_ or mplayer or any other media player that can be launched from the command line
 
 Installing
 ~~~~~~~~~~
@@ -70,6 +70,7 @@ For more details run with the help option.
     Usage:
       podcast
       podcast add <url>
+      podcast delete
       podcast set-player <player>
       podcast -i <opml-file>
       podcast -h | --help
