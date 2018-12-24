@@ -84,7 +84,7 @@ class PodcastPlayer(object):
         elif inp == "Quit":
             sys.exit(0)
 
-    def delete_podcast_menu():
+    def delete_podcast_menu(self):
         """
         The delete menu
         Here we list all the podcasts that the user is subscribed to
