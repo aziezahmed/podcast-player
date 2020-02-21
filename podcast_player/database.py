@@ -1,4 +1,4 @@
-from sqlobject import *
+from sqlobject import SQLObject, StringCol
 
 class PodcastDatabase(SQLObject):
     """A database of podcast names and urls."""    

@@ -3,6 +3,7 @@
 import os, configparser
 
 class UserSettings(object):
+
     def __init__(self):
         """
         To initialise we create a config parser object with the default 
