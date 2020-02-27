@@ -1,37 +1,16 @@
-
+from podcast_player.database_manager import PodcastDatabaseManager
+from podcast_player.podcast_parser import PodcastParser
+from podcast_player.user_settings import UserSettings
 import os
 import sys
-
-from os.path import expanduser
-
-import feedparser
-import listparser
-
-from PyInquirer import  prompt
-from pprint import pprint 
-
-from podcast_player.user_settings import UserSettings
-from podcast_player.database import PodcastDatabase
-
-from sqlobject import *
+from PyInquirer import prompt
 
 class PodcastPlayer(object):
-    def __init__(self):
-        """
-        Inital Setup:
-        Create the database and make a connection to it
-        """
-        basedir = "~/.podcast"
-        path = basedir + os.sep + 'podcast.sqlite'
 
-        # If the ~/.podcast directory does not exist, let's create it.
-        if not os.path.exists(expanduser(basedir)):
-            print("Creating base dir %s"%basedir)
-            os.makedirs(expanduser(basedir))
-
-        # Make a connection to the DB. Create it if it does not exist
-        PodcastDatabase._connection = sqlite.builder()(expanduser(path), debug=False)
-        PodcastDatabase.createTable(ifNotExists=True)
+    def __init__(self, debug_=False):
+        self._database_manager = PodcastDatabaseManager(debug_=debug_)
+        self._podcast_parser = PodcastParser(debug_=debug_)
+        self.debug_ = debug_
 
     def add_podcast(self, url):
         """
@@ -41,17 +20,9 @@ class PodcastPlayer(object):
         ----------
         url : string
             The URL of the podcast to subscribe to.
-        """    
-        # Look to see if the podcast is already in the directory
-        results = list(PodcastDatabase.select(PodcastDatabase.q.url == url))
-
-        # If it is not then we can add it
-        if len(results) == 0:    
-            feed = feedparser.parse(url).feed
-            name = url
-            if hasattr(feed, "title"):
-                name = feed.title
-                new_feed = PodcastDatabase(name=name, url=url)
+        """
+        podcast = self._podcast_parser.create_podcast_from(url)
+        self._database_manager.add_podcast(podcast)
                 
     def import_opml(self, opml_file):
         """
@@ -62,12 +33,8 @@ class PodcastPlayer(object):
         opml_file : string
             The relative path to the opml file that we want to import. 
         """
-        print("importing " + opml_file)
-        
-        new_feeds = listparser.parse(opml_file)
-        for feed in new_feeds.feeds:
-            print(feed.url)
-            self.add_podcast(feed.url)
+        for podcast in self._podcast_parser.generate_feeds_from(opml_file):
+            self._database_manager.add_podcast(podcast)
 
     def handle_choice(self, answers, key):
         """
@@ -90,7 +57,7 @@ class PodcastPlayer(object):
         Here we list all the podcasts that the user is subscribed to
         and allow the user to choose which one they want to delete
         """
-        podcasts = PodcastDatabase.select()
+        podcasts = self._database_manager.get_all_subscribed_podcasts()
         
         if podcasts.count() == 0:
             print("There are no podcasts to delete!\n")
@@ -111,12 +78,8 @@ class PodcastPlayer(object):
 
         answers = prompt(questions)
         self.handle_choice(answers, 'podcasts')
-
-        podcasts = answers["podcasts"]
-
-        for podcast in podcasts:
-            index = list(PodcastDatabase.select(PodcastDatabase.q.name == podcast))[0].id
-            PodcastDatabase.delete(index)
+        podcasts = answers["podcasts"]     
+        self._database_manager.delete(podcasts)
 
     def set_player(self, player):
         """
@@ -139,21 +102,6 @@ class PodcastPlayer(object):
         os.system('clear')
         os.system(player + " "+ url)
 
-    def get_episode_media_url(self, podcast_entry):
-        """
-        Extract the media URL from the podcast entry
-
-        Parameters
-        ----------
-        podcast_entry : object
-            The entry object from the feed.
-        """
-        links = podcast_entry["links"]
-
-        for link in links:
-            if "audio" in link["type"]:
-                return link["href"]
-
     def episode_menu(self, podcast):
         """
         The episode menu
@@ -164,12 +112,13 @@ class PodcastPlayer(object):
         ----------
         podcast : PodcastDatabase
             The podcast entry from the database
-        """    
-        feed = feedparser.parse(podcast.url)  
+        """
+        entries = []
         titles = []
-
-        for index, entry in enumerate(feed.entries):
-            titles.append(entry['title'])
+        # NB: podcast entries are already sorted per decreasing published date per construction
+        for podcast_entry in self._podcast_parser.generate_feed_entries_from(podcast.url, self.debug_):
+            entries.append(podcast_entry)
+            titles.append("{}".format(podcast_entry))
         
         titles.append("Back")
         titles.append("Quit")
@@ -187,11 +136,11 @@ class PodcastPlayer(object):
         self.handle_choice(answers, 'episode')
 
         choice = titles.index(answers["episode"])
-        entry = feed.entries[choice]
-        url = self.get_episode_media_url(entry)
+        chosen_podcast_entry = entries[choice]
+        url_to_play = chosen_podcast_entry.get_episode_media_url()
 
-        if type(url) is str:
-            self.play_podcast(url)
+        if type(url_to_play) is str:
+            self.play_podcast(url_to_play)
         self.episode_menu(podcast)   
      
     def main_menu(self):
@@ -201,7 +150,7 @@ class PodcastPlayer(object):
         and allow the user to choose which one they want to see the episodes of
         At that point we move to the episode menu
         """
-        podcasts = PodcastDatabase.select()
+        podcasts = self._database_manager.get_all_subscribed_podcasts()
         
         if podcasts.count() == 0:
             print("There are no podcast feeds found.")
@@ -214,6 +163,8 @@ class PodcastPlayer(object):
         for index, podcast in enumerate(podcasts):
             podcast_names.append(podcast.name)
 
+        print (podcast_names)
+        
         podcast_names.append("Quit")
 
         questions = [
@@ -228,5 +179,5 @@ class PodcastPlayer(object):
         answers = prompt(questions)
         self.handle_choice(answers,'podcast')
 
-        podcast = PodcastDatabase.select(PodcastDatabase.q.name == answers["podcast"])
-        self.episode_menu(list(podcast)[0])
+        chosen_podcast = self._database_manager.get_matching_podcast(answers["podcast"])
+        self.episode_menu(chosen_podcast)

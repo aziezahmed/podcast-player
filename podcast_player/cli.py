@@ -26,9 +26,7 @@ Help:
 """
 
 from docopt import docopt
-
 from podcast_player.podcast_player import PodcastPlayer
-
 from . import __version__ as VERSION
 
 def main():
@@ -36,6 +34,7 @@ def main():
     options = docopt(__doc__, version=VERSION)
 
     podcast_player = PodcastPlayer()
+    print ("Main / options {}".format(options))
 
     if(options["add"]):
         podcast_player.add_podcast(options["<url>"])
