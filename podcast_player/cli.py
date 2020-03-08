@@ -34,7 +34,7 @@ def main():
     options = docopt(__doc__, version=VERSION)
 
     podcast_player = PodcastPlayer()
-
+    
     if(options["add"]):
         podcast_player.add_podcast(options["<url>"])
 
