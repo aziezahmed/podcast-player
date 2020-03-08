@@ -35,8 +35,6 @@ def main():
 
     podcast_player = PodcastPlayer()
     
-    #print ("Main / options {}".format(options))
-
     if(options["add"]):
         podcast_player.add_podcast(options["<url>"])
 
