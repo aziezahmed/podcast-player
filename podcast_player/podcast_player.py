@@ -163,8 +163,6 @@ class PodcastPlayer(object):
         for index, podcast in enumerate(podcasts):
             podcast_names.append(podcast.name)
 
-        print (podcast_names)
-        
         podcast_names.append("Quit")
 
         questions = [
